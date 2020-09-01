@@ -16,6 +16,8 @@ public class ClienteDao {
     private final String stmtListarClientes = "SELECT * from cliente;";
     private final String stmtRemoverCliente = "DELETE FROM cliente WHERE id_cliente = ?";
     private final String stmtConsultarId = "SELECT * FROM cliente WHERE id_cliente = ?";
+    private final String stmtBuscarClientes = "SELECT * FROM cliente WHERE MATCH(nome, sobrenome) AGAINST(? IN NATURAL LANGUAGE MODE);";
+    private final String stmtConsultarCpf = "SELECT * FROM cliente WHERE cpf = ?";
     
     public List<Cliente> listarClientes() throws SQLException
     {
@@ -40,12 +42,13 @@ public class ClienteDao {
             listaClientes.add(cliente);
         }
         
-        con.commit();
+//        con.commit();
         stmt.close();
         con.close();
         
         return listaClientes;
     }
+    
     public void incluirCliente(Cliente cliente) throws SQLException
     {
         Connection con = null;
@@ -158,5 +161,58 @@ public class ClienteDao {
         con.close();
         
         return cliente;
+    }
+    public Cliente consultarCpf(String cpf) throws SQLException
+    {
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        con = ConnectionFactory.getConnection();
+        stmt = con.prepareStatement(stmtConsultarCpf);
+        stmt.setString(1, cpf);
+        rs = stmt.executeQuery();
+        rs.next();
+        
+        Cliente cliente = new Cliente(
+                rs.getString("nome"),
+                rs.getString("sobrenome"),
+                rs.getString("cpf"));
+        
+        cliente.setId(rs.getInt("id_cliente"));
+        
+        stmt.close();
+        con.close();
+        
+        return cliente;
+    }
+    public List<Cliente> buscarClientes(String termo) throws SQLException
+    {
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        con = ConnectionFactory.getConnection();
+        stmt = con.prepareStatement(stmtBuscarClientes);
+        stmt.setString(1, termo);
+        rs = stmt.executeQuery();
+        
+        List<Cliente> listaClientes = new ArrayList<Cliente>();
+        
+        while(rs.next())
+        {
+            Cliente cliente = new Cliente(
+                    rs.getString("nome"),
+                    rs.getString("sobrenome"),
+                    rs.getString("cpf")
+            );
+            cliente.setId(rs.getInt("id_cliente"));
+            listaClientes.add(cliente);
+        }
+        
+        stmt.close();
+        con.close();
+        
+        return listaClientes;
     }
 }

@@ -30,9 +30,19 @@ public class Pedido
         this.itens = itens;
         this.data = LocalDate.now();
     }
-        public Pedido(Cliente cliente)
+    public Pedido(Cliente cliente)
     {
         this.cliente = cliente;
+        this.data = LocalDate.now();
+    }
+    public Pedido(Integer id, Cliente cliente, LocalDate data)
+    {
+        this.id = id;
+        this.cliente = cliente;
+        this.data = data;
+    }
+    
+    public Pedido(){
         this.data = LocalDate.now();
     }
 

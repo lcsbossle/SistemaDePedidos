@@ -4,7 +4,8 @@ CREATE TABLE cliente(
     nome VARCHAR(30),
     sobrenome VARCHAR(30),
     PRIMARY KEY (id_cliente),
-    CONSTRAINT cpf_unico UNIQUE(cpf)
+    CONSTRAINT cpf_unico UNIQUE(cpf),
+    FULLTEXT (nome, sobrenome)
 );
 
 CREATE TABLE produto(

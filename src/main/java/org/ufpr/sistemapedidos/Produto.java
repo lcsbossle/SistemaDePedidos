@@ -11,11 +11,10 @@ public class Produto
         this.descricao = descricao;
     }
     
-//    public Produto(int id, String descricao)
-//    {
-//        this.id = id;
-//        this.descricao = descricao;
-//    }
+    public Produto(int id)
+    {
+        this.id = id;
+    }
 
     public int getId() {
         return id;
